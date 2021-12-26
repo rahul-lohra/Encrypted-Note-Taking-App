@@ -13,9 +13,10 @@ import com.rahul.notetaking.room.EncryptStatus.Companion.ENC_ON_PROGRESS
 data class EncryptFileEntity(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "file_name") val fileName: String?,
+    @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "enc_status") @EncryptStatus val encryptStatus: Int?
 ) {
-    constructor(fileName: String?, encryptStatus: Int?) : this(0, fileName, encryptStatus)
+    constructor(fileName: String?,title: String, encryptStatus: Int?) : this(0, fileName, title, encryptStatus)
 }
 
 sealed class EncryptStatusWrapper(val fileName: String) {

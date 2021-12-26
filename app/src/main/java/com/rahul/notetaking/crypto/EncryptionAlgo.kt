@@ -17,3 +17,9 @@ class AppEncryptionAlgo : EncryptionAlgo(
     KeyProperties.BLOCK_MODE_CBC,
     KeyProperties.ENCRYPTION_PADDING_PKCS7
 )
+
+class AesGcmNoPaddingAlgo : EncryptionAlgo(
+    KeyProperties.KEY_ALGORITHM_AES,
+    KeyProperties.BLOCK_MODE_GCM,
+    KeyProperties.ENCRYPTION_PADDING_NONE
+)

@@ -11,9 +11,13 @@ interface CryptoContract {
     }
 
     fun encrypt(dataToEncrypt: DataToEncrypt): Flow<EncryptStatusWrapper>
-    fun decrypt(dataForDecrypt: DataForDecrypt):DecryptedData
+    fun decrypt(dataForDecrypt: DataForDecrypt): DecryptedBody
 }
 
-data class DataToEncrypt(val title:String, val body:String)
-data class DataForDecrypt(val title:String)
-typealias DecryptedData = String
+data class DataToEncrypt(val title: String, val body: String, val fileName: String? = null) {
+    fun isUpdating() = !fileName.isNullOrEmpty()
+}
+
+data class DataForDecrypt(val id: Int, val fileName: String)
+data class DecryptedData(val id: Int, val title:String, val body: String)
+typealias DecryptedBody = String

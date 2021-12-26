@@ -19,8 +19,8 @@ class CryptoUseCase(context: Context) {
         return getCrypto().encrypt(dataToEncrypt)
     }
 
-    fun decrypt(dataForDecrypt: DataForDecrypt) {
-        getCrypto().decrypt(dataForDecrypt)
+    fun decrypt(dataForDecrypt: DataForDecrypt):DecryptedBody {
+        return getCrypto().decrypt(dataForDecrypt)
     }
 
 }

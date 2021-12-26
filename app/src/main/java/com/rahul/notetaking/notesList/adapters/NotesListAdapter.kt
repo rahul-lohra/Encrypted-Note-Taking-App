@@ -10,18 +10,18 @@ import com.rahul.notetaking.R
 
 import android.view.LayoutInflater
 
-class NotesListAdapter :
+class NotesListAdapter(val onItemClick: (NoteListItem) -> Unit) :
     RecyclerView.Adapter<NotesListViewHolder>() {
     private val mDiffer: AsyncListDiffer<NoteListItem> = AsyncListDiffer(this, DiffCallback())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesListViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(NotesListViewHolder.LAYOUT_ID, parent, false)
-        return NotesListViewHolder(view)
+        return NotesListViewHolder(onItemClick, view)
     }
 
     override fun onBindViewHolder(holder: NotesListViewHolder, position: Int) {
-        val item  = mDiffer.currentList[position]
+        val item = mDiffer.currentList[position]
         holder.setData(item)
     }
 
@@ -29,22 +29,29 @@ class NotesListAdapter :
         return mDiffer.currentList.size;
     }
 
-    fun submit(list: List<NoteListItem>){
+    fun submit(list: List<NoteListItem>) {
         mDiffer.submitList(list)
     }
 }
 
-class NotesListViewHolder(item: View) : RecyclerView.ViewHolder(item) {
+class NotesListViewHolder(val onItemClick: (NoteListItem) -> Unit, item: View) :
+    RecyclerView.ViewHolder(item) {
 
-    companion object{
+    companion object {
         val LAYOUT_ID = com.rahul.notetaking.R.layout.list_item_notes
     }
+
     private val tvTitle = item.findViewById<AppCompatTextView>(R.id.tvTitle)
     private val tvBody = item.findViewById<AppCompatTextView>(R.id.tvBody)
+    private val parent = item.findViewById<View>(R.id.list_item_parent)
 
-    fun setData(data:NoteListItem){
+    fun setData(data: NoteListItem) {
         tvTitle.text = data.title
         tvBody.text = data.body
+
+        parent.setOnClickListener {
+            onItemClick(data)
+        }
     }
 }
 

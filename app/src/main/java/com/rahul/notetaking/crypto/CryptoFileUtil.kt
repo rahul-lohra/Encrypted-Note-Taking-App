@@ -15,4 +15,11 @@ object CryptoFileUtil {
             encryptedFile.mkdirs()
         return File(encryptedFile, createFileName(title))
     }
+
+    fun getEncryptedFile(context: Context, fileName: String): File {
+        val encryptedFile = File(context.filesDir, "app_encrypted")
+        if (!encryptedFile.exists())
+            encryptedFile.mkdirs()
+        return File(encryptedFile, fileName)
+    }
 }

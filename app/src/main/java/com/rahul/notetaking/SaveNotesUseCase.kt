@@ -18,26 +18,58 @@ class SaveNotesUseCase(val context: Context) {
     private val dao = EncryptFileDatabase.getDatabase(context).encFileDao()
 
     suspend fun saveNotes(title: String, body: String) {
-        Timber.e(TAG+"Save notes")
         cryptoUseCase.encrypt(DataToEncrypt(title, body))
             .catch {
-                Timber.e(TAG+it)
+                Timber.e(TAG + it)
             }
             .collect {
-                when(it){
-                    is EncryptStatusWrapper.OnProgress->{
-                        dao.insert(EncryptFileEntity(it.fileName, EncryptStatus.ENC_ON_PROGRESS))
-                        Timber.d(TAG+it.fileName +"Enc onprogress")
+                when (it) {
+                    is EncryptStatusWrapper.OnProgress -> {
+                        dao.insert(
+                            EncryptFileEntity(
+                                it.fileName,
+                                title,
+                                EncryptStatus.ENC_ON_PROGRESS
+                            )
+                        )
+                        Timber.d(TAG + it.fileName + "Enc onprogress")
                     }
-                    is EncryptStatusWrapper.OnCompleted->{
+                    is EncryptStatusWrapper.OnCompleted -> {
                         dao.update(it.fileName, EncryptStatus.ENC_COMPLETED)
-                        Timber.d(TAG+it.fileName +"Enc finished")
+                        Timber.d(TAG + it.fileName + "Enc finished")
                     }
-                    is EncryptStatusWrapper.OnError->{
-                        Timber.e(TAG+it.fileName +"Enc error")
-                        if(it.fileName.isNotEmpty()){
+                    is EncryptStatusWrapper.OnError -> {
+                        Timber.e(TAG + it.fileName + "Enc error")
+                        if (it.fileName.isNotEmpty()) {
                             dao.delete(it.fileName)
                         }
+                    }
+                }
+
+            }
+    }
+
+    suspend fun updateNotes(id: Int, title: String, body: String) {
+        val encryptFileEntity = dao.get(id)
+        dao.update(id,title)
+
+        cryptoUseCase.encrypt(DataToEncrypt(title, body, encryptFileEntity.fileName))
+            .catch {
+                Timber.e(TAG + it)
+            }
+            .collect {
+                when (it) {
+                    is EncryptStatusWrapper.OnProgress -> {
+                        dao.update(id,EncryptStatus.ENC_ON_PROGRESS)
+                        Timber.d(TAG + it.fileName + "Enc onprogress")
+                    }
+                    is EncryptStatusWrapper.OnCompleted -> {
+                        dao.update(it.fileName, EncryptStatus.ENC_COMPLETED)
+                        Timber.d(TAG + it.fileName + "Enc finished")
+                    }
+                    is EncryptStatusWrapper.OnError -> {
+                        Timber.e(TAG + it.fileName + "Enc error")
+                        //Do nothing
                     }
                 }
 

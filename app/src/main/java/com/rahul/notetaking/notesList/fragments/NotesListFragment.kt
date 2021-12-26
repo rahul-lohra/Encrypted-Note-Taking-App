@@ -48,7 +48,9 @@ class NotesListFragment : Fragment() {
 
         rv = v.findViewById(R.id.rv)
         rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        adapter = NotesListAdapter()
+        adapter = NotesListAdapter {
+            openDetailFragment(it.id)
+        }
         rv.adapter = adapter
 
         viewFlipper = v.findViewById(R.id.viewFlipper)
@@ -97,12 +99,12 @@ class NotesListFragment : Fragment() {
 
     }
 
-    private fun openDetailFragment() {
+    private fun openDetailFragment(id: Int? = null) {
         if (activity is MainActivity) {
             val containerId = (activity as MainActivity).getFragmentContainerId()
             activity?.supportFragmentManager
                 ?.beginTransaction()
-                ?.replace(containerId, NotesDetailFragment.newInstance(), "notes_detail")
+                ?.replace(containerId, NotesDetailFragment.newInstance(id), "notes_detail")
                 ?.addToBackStack(null)
                 ?.commit()
         }

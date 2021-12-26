@@ -28,7 +28,7 @@ class NotesListViewModel(app: Application) : AndroidViewModel(app) {
                     it.filter {
                         !it.fileName.isNullOrEmpty()
                     }.forEach {
-                        itemList.add(NoteListItem(it.uid, it.fileName!!, "some body"))
+                        itemList.add(NoteListItem(it.uid, it.title, "some body"))
                     }
                     itemList
                 }.collect {

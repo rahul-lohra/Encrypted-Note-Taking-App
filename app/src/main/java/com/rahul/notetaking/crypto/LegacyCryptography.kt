@@ -9,7 +9,7 @@ class LegacyCryptography: CryptoContract {
         TODO("Not yet implemented")
     }
 
-    override fun decrypt(dataForDecrypt: DataForDecrypt): DecryptedData {
+    override fun decrypt(dataForDecrypt: DataForDecrypt): DecryptedBody {
         TODO("Not yet implemented")
     }
 }
